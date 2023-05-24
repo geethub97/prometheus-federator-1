@@ -17,22 +17,35 @@ rules:
   resourceNames:
   - "http:{{ template "project-prometheus-stack.fullname" . }}-prometheus:{{ .Values.prometheus.service.port }}"
   - "https:{{ template "project-prometheus-stack.fullname" . }}-prometheus:{{ .Values.prometheus.service.port }}"
+{{- if .Values.alertmanager.enabled }}
   - "http:{{ template "project-prometheus-stack.fullname" . }}-alertmanager:{{ .Values.alertmanager.service.port }}"
   - "https:{{ template "project-prometheus-stack.fullname" . }}-alertmanager:{{ .Values.alertmanager.service.port }}"
+{{- end }}
+{{- if .Values.grafana.enabled }}
   - "http:{{ include "call-nested" (list . "grafana" "grafana.fullname") }}:{{ .Values.grafana.service.port }}"
   - "https:{{ include "call-nested" (list . "grafana" "grafana.fullname") }}:{{ .Values.grafana.service.port }}"
+{{- end }}
   verbs:
   - 'get'
+  - 'create'
+  - 'update'
+  - 'patch'
+  - 'delete'
 - apiGroups:
   - ""
   resources:
   - endpoints
   resourceNames:
   - {{ template "project-prometheus-stack.fullname" . }}-prometheus
+{{- if .Values.alertmanager.enabled }}
   - {{ template "project-prometheus-stack.fullname" . }}-alertmanager
+{{- end }}
+{{- if .Values.grafana.enabled }}
   - {{ include "call-nested" (list . "grafana" "grafana.fullname") }}
+{{- end }}
   verbs:
   - list
+{{- if .Values.alertmanager.enabled }}
 - apiGroups:
   - ""
   resources:
@@ -46,6 +59,7 @@ rules:
   - update
   - patch
   - delete
+{{- end }}
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
@@ -65,22 +79,35 @@ rules:
   resourceNames:
   - "http:{{ template "project-prometheus-stack.fullname" . }}-prometheus:{{ .Values.prometheus.service.port }}"
   - "https:{{ template "project-prometheus-stack.fullname" . }}-prometheus:{{ .Values.prometheus.service.port }}"
+{{- if .Values.alertmanager.enabled }}
   - "http:{{ template "project-prometheus-stack.fullname" . }}-alertmanager:{{ .Values.alertmanager.service.port }}"
   - "https:{{ template "project-prometheus-stack.fullname" . }}-alertmanager:{{ .Values.alertmanager.service.port }}"
+{{- end }}
+{{- if .Values.grafana.enabled }}
   - "http:{{ include "call-nested" (list . "grafana" "grafana.fullname") }}:{{ .Values.grafana.service.port }}"
   - "https:{{ include "call-nested" (list . "grafana" "grafana.fullname") }}:{{ .Values.grafana.service.port }}"
+{{- end }}
   verbs:
   - 'get'
+  - 'create'
+  - 'update'
+  - 'patch'
+  - 'delete'
 - apiGroups:
   - ""
   resources:
   - endpoints
   resourceNames:
   - {{ template "project-prometheus-stack.fullname" . }}-prometheus
+{{- if .Values.alertmanager.enabled }}
   - {{ template "project-prometheus-stack.fullname" . }}-alertmanager
+{{- end }}
+{{- if .Values.grafana.enabled }}
   - {{ include "call-nested" (list . "grafana" "grafana.fullname") }}
+{{- end }}
   verbs:
   - list
+{{- if .Values.alertmanager.enabled }}
 - apiGroups:
   - ""
   resources:
@@ -93,6 +120,7 @@ rules:
   - watch
   - update
   - patch
+{{- end }}
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
@@ -112,10 +140,14 @@ rules:
   resourceNames:
   - "http:{{ template "project-prometheus-stack.fullname" . }}-prometheus:{{ .Values.prometheus.service.port }}"
   - "https:{{ template "project-prometheus-stack.fullname" . }}-prometheus:{{ .Values.prometheus.service.port }}"
+{{- if .Values.alertmanager.enabled }}
   - "http:{{ template "project-prometheus-stack.fullname" . }}-alertmanager:{{ .Values.alertmanager.service.port }}"
   - "https:{{ template "project-prometheus-stack.fullname" . }}-alertmanager:{{ .Values.alertmanager.service.port }}"
+{{- end }}
+{{- if .Values.grafana.enabled }}
   - "http:{{ include "call-nested" (list . "grafana" "grafana.fullname") }}:{{ .Values.grafana.service.port }}"
   - "https:{{ include "call-nested" (list . "grafana" "grafana.fullname") }}:{{ .Values.grafana.service.port }}"
+{{- end }}
   verbs:
   - 'get'
 - apiGroups:
@@ -124,10 +156,15 @@ rules:
   - endpoints
   resourceNames:
   - {{ template "project-prometheus-stack.fullname" . }}-prometheus
+{{- if .Values.alertmanager.enabled }}
   - {{ template "project-prometheus-stack.fullname" . }}-alertmanager
+{{- end }}
+{{- if .Values.grafana.enabled }}
   - {{ include "call-nested" (list . "grafana" "grafana.fullname") }}
+{{- end }}
   verbs:
   - list
+{{- if .Values.alertmanager.enabled }}
 - apiGroups:
   - ""
   resources:
@@ -138,4 +175,5 @@ rules:
   - get
   - list
   - watch
+{{- end }}
 {{- end }}
